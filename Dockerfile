@@ -6,6 +6,8 @@ RUN apt-get install -yq lua5.1 lua5.1-dev unzip libpcre3-dev zlib1g-dev build-es
 
 WORKDIR /build/
 
+RUN wget https://github.com/SlastikhinNikita/JenHook/raw/master/nginx.conf
+RUN wget https://github.com/SlastikhinNikita/JenHook/raw/master/index.html
 RUN mkdir /usr/include/lua5.1/include/
 #RUN ls /usr/include/lua5.1/ /usr/include/lua5.1/include/
 RUN ln -s /usr/lib/x86_64-linux-gnu/liblua5.1.so /usr/local/lib/liblua.so
@@ -49,4 +51,6 @@ COPY --from=builder /usr/lib/x86_64-linux-gnu/liblua5.1.so.0 /usr/lib/x86_64-lin
 RUN dpkg -i /app/*.deb
 RUN mkdir /opt/nginx/logs/
 CMD /opt/nginx/sbin/nginx -g daemon\ off\;
+COPY --from=builder /build/nginx.conf /opt/nginx/conf/
+COPY --from=builder /build/index.html /opt/nginx/html
 
